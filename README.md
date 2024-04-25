@@ -29,6 +29,136 @@ yêu cầu và chờ đợi yêu cầu tiếp theo từ client.
 
 ```
 
+## KNOWLEDGE REACT COMPONENT
+
+### Component Life cyles (Vòng đời của Component)
+```js
+
+- Life cycle của component trong reactjs là quá trình từ khi tạo ra, 
+thay đổi và hủy bỏ component. Gồm 3 giai đoạn:
+
++ Tạo ra (Mounting)
+- Ví dụ:
+import React, { useState } from 'react';
+
+const View = () => {
+  
+
+  return (
+    <div>
+        Hello world!
+    </div>
+
+  );
+};
+
+const App = () => {
+
+  const [show, setShow] = useState(0);
+
+  return (
+    <div>
+      <button onClick={()=> setShow(!show)}>Show</button>
+      {show && <View/>}
+    </div>
+
+  );
+};
+
+export default Counter;
+
+- Trong ví dụ này khi bấm Show component
+View sẽ được mounted và render ra giao diện
+
+
++ Thay đổi (Updating)
+- Ví dụ:
+import React, { useState } from 'react';
+
+const Counter = () => {
+  const [count, setCount] = useState(0);
+
+  const increment = () => {
+    setCount(prevCount => prevCount + 1);
+  };
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={increment}>Increment</button>
+    </div>
+  );
+};
+
+export default Counter;
+- Trong trường hợp này mỗi khi click Increment biến count sẽ
+được update giá trị mới và component sẽ updating (re render)
+lại và thay đổi giá trị biến count trên giao diện
+
+
++ Hủy bỏ (UnMounting)
+- Ví dụ: 
+
+import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
+
+const SlowComponent = () => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Một tác vụ chậm, ví dụ: gửi request mạng
+        const response = await fetch('https://api.example.com/slow-request');
+        const data = await response.json();
+        console.log(data);
+        setCount(count + 1);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchData();
+
+    // Cleanup khi component unmount
+    return () => {
+      // Hủy bỏ các tài nguyên không cần thiết ở đây, ví dụ: event listeners, subscriptions
+      console.log('Cleanup executed');
+    };
+  }, []); // Tham số thứ hai là mảng rỗng, chỉ chạy một lần sau khi component mount
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+    </div>
+  );
+};
+
+const App = () => {
+
+  const [show, setShow] = useState(0);
+
+  return (
+    <div>
+      <button onClick={()=> setShow(!show)}>Show</button>
+      {show && <SlowComponent/>}
+    </div>
+
+  );
+};
+
+- Trong ví dụ này khi bấm "Show" thì SlowComponent
+sẽ được mount và render ra giao diện sau đó 
+bấm tiếp "Make Slow Request" thì hàm fetchData sẽ chạy
+và 1 request sẽ gửi đi trong thời gian request gửi đi
+nếu bấm tiếp "Show" thì SlowComponent sẽ bị (unmount) ẩn đi 
+lúc này nếu k có cleanup trong hàm useEffect thì
+hàm fetchData vẫn hoạt động điều này sẽ làm tiêu
+tốn tài nguyên của ứng dụng
+
+```
+
 ## KNOWLEDGE HOOKS IN REACT JS
 
 ### useState hook
@@ -162,133 +292,6 @@ function View() {
     </div>
   );
 }
-
-```
-
-### useEffect Life cyles (Vòng đời của hàm useEffect)
-```js
-
-- Life cycle của component trong reactjs là quá trình từ khi tạo ra, thay đổi và hủy bỏ component. Gồm 3 giai đoạn:
-
-+ Tạo ra (Mounting)
-- Ví dụ:
-import React, { useState } from 'react';
-
-const View = () => {
-  
-
-  return (
-    <div>
-        Hello world!
-    </div>
-
-  );
-};
-
-const App = () => {
-
-  const [show, setShow] = useState(0);
-
-  return (
-    <div>
-      <button onClick={()=> setShow(!show)}>Show</button>
-      {show && <View/>}
-    </div>
-
-  );
-};
-
-export default Counter;
-
-- Trong ví dụ này khi bấm Show component
-View sẽ được mounted và render ra giao diện
-
-
-+ Thay đổi (Updating)
-- Ví dụ:
-import React, { useState } from 'react';
-
-const Counter = () => {
-  const [count, setCount] = useState(0);
-
-  const increment = () => {
-    setCount(prevCount => prevCount + 1);
-  };
-
-  return (
-    <div>
-      <p>Count: {count}</p>
-      <button onClick={increment}>Increment</button>
-    </div>
-  );
-};
-
-export default Counter;
-- Trong trường hợp này mỗi khi click Increment biến count sẽ
-được update giá trị mới và component sẽ updating (re render)
-lại và thay đổi giá trị biến count trên giao diện
-
-
-+ Hủy bỏ (UnMounting)
-- Ví dụ: 
-
-import React, { useState } from 'react';
-
-import React, { useState, useEffect } from 'react';
-
-const SlowComponent = () => {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Một tác vụ chậm, ví dụ: gửi request mạng
-        const response = await fetch('https://api.example.com/slow-request');
-        const data = await response.json();
-        console.log(data);
-        setCount(count + 1);
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    };
-
-    fetchData();
-
-    // Cleanup khi component unmount
-    return () => {
-      // Hủy bỏ các tài nguyên không cần thiết ở đây, ví dụ: event listeners, subscriptions
-      console.log('Cleanup executed');
-    };
-  }, []); // Tham số thứ hai là mảng rỗng, chỉ chạy một lần sau khi component mount
-
-  return (
-    <div>
-      <p>Count: {count}</p>
-    </div>
-  );
-};
-
-const App = () => {
-
-  const [show, setShow] = useState(0);
-
-  return (
-    <div>
-      <button onClick={()=> setShow(!show)}>Show</button>
-      {show && <SlowComponent/>}
-    </div>
-
-  );
-};
-
-- Trong ví dụ này khi bấm "Show" thì SlowComponent
-sẽ được mount và render ra giao diện sau đó 
-bấm tiếp "Make Slow Request" thì hàm fetchData sẽ chạy
-và 1 request sẽ gửi đi trong thời gian request gửi đi
-nếu bấm tiếp "Show" thì SlowComponent sẽ bị (unmount) ẩn đi 
-lúc này nếu k có cleanup trong hàm useEffect thì
-hàm fetchData vẫn hoạt động điều này sẽ làm tiêu
-tốn tài nguyên của ứng dụng
 
 ```
 
