@@ -1,4 +1,7 @@
-# KNOWLEDGE RESTFUL API 
+
+# BLOG
+
+## KNOWLEDGE RESTFUL API 
 
 ### Life cycle restful api (Vòng đời của restful api)
 ```javascript
@@ -26,7 +29,7 @@ yêu cầu và chờ đợi yêu cầu tiếp theo từ client.
 
 ```
 
-# KNOWLEDGE HOOKS IN REACT JS
+## KNOWLEDGE HOOKS IN REACT JS
 
 ### useState hook
 ```javascript
@@ -289,7 +292,7 @@ tốn tài nguyên của ứng dụng
 
 ```
 
-# Ask and Answer
+## Ask and Answer
 ```js
 1. Onclick trên html khác gì với onclick trên JS
 =>
