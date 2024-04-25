@@ -198,7 +198,7 @@ function View() {
 
 ```
 
-### useEffect hooks
+### useEffect hook
 
 ```js
 - Khi sử dụng useEffect chúng sẽ phải truyền vào hàm callback
