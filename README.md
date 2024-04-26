@@ -20,6 +20,7 @@ biết nhờ cơ chế Dependency injection.
 - Khi ứng dụng Spring chạy, Spring IoC container sẽ quét toàn bộ packages, 
 tìm ra các bean và đưa vào ApplicationContext. Cơ chế đó là Component scan
 
+
 Ví dụ về bean và autowired: 
 
 @Service
@@ -111,6 +112,75 @@ public class DisplayHomeController {
         System.out.println("Bean 3: "+countService3.LoadCount());
     }
 }
+
+```
+
+### Bean life cycle (Vòng đời của bean)
+
+```js
+
+- Khởi tạo (Instantiation): Trong giai đoạn này, 
+Spring tạo ra một phiên bản mới của bean. 
+Điều này có thể xảy ra thông qua việc tạo một đối 
+tượng mới hoặc thông qua việc lấy một đối tượng từ một nơi khác,
+chẳng hạn từ một pool đối tượng.
+
+- Thiết lập các thuộc tính (Populate Properties): Sau khi bean được tạo ra, 
+Spring sẽ thiết lập các giá trị cho các thuộc tính của bean, 
+bao gồm các dependency được inject thông qua các annotation như @Autowired.
+
+- Gọi các callback (Calling Callbacks): Sau khi các thuộc tính đã được thiết lập, 
+Spring sẽ gọi các callback để cho phép bean thực hiện các thao tác khởi tạo hoặc tùy chỉnh.
+Các callback này có thể là @PostConstruct (được gọi 
+sau khi bean được khởi tạo và tất cả các thuộc tính đã được thiết lập) 
+hoặc các phương thức khác do người dùng định nghĩa.
+
+- Sử dụng bean (Bean Ready for Use): 
+Bean ở trong trạng thái sẵn sàng để sử dụng.
+Ở giai đoạn này, bean có thể được chia sẻ và 
+sử dụng bởi các thành phần khác trong ứng dụng.
+
+- Hủy bỏ bean (Bean Destruction): Khi ứng dụng hoặc container Spring bị đóng, 
+hoặc khi không còn cần thiết nữa, Spring sẽ hủy bỏ bean. 
+Trong giai đoạn này, Spring gọi các callback hủy bỏ để cho
+phép bean thực hiện các tác vụ dọn dẹp hoặc giải phóng tài nguyên.
+
+ví dụ:
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import org.springframework.stereotype.Service;
+
+@Service
+public class TaskService {
+
+    private ExternalNotificationService notificationService;
+
+    @PostConstruct
+    public void init() {
+        // Kết nối đến hệ thống thông báo khi bean được khởi tạo
+        notificationService = new ExternalNotificationService();
+        notificationService.connect();
+        System.out.println("TaskService initialized");
+    }
+
+    public void createTask(Task task) {
+        // Thực hiện tạo tác vụ và gửi thông báo
+        // Sử dụng notificationService để gửi thông báo
+        notificationService.sendNotification("New task created: " + task.getTitle());
+    }
+
+    // Các phương thức khác của TaskService
+    @PreDestroy
+    public void cleanup() {
+        // Đóng kết nối đến hệ thống thông báo khi bean bị hủy bỏ
+        if (notificationService != null) {
+            notificationService.disconnect();
+        }
+        System.out.println("TaskService cleanup");
+    }
+}
+
 
 ```
 
