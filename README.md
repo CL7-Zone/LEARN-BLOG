@@ -1,6 +1,119 @@
 
 # BLOG
 
+## KNOWLEDGE ANNOTION
+
+### @Autowired and @Bean
+
+```java
+
+- bean là những module chính của chương trình, 
+được tạo ra và quản lý bởi Spring IoC container.
+
+- Các bean có thể phụ thuộc lẫn nhau, như ví dụ về DisplayHomeController, 
+CountService và countComponent.
+Sự phụ thuộc này được mô tả cho IoC 
+biết nhờ cơ chế Dependency injection.
+
+- Dùng @Component lên class là class đó là một bean.
+
+- Khi ứng dụng Spring chạy, Spring IoC container sẽ quét toàn bộ packages, 
+tìm ra các bean và đưa vào ApplicationContext. Cơ chế đó là Component scan
+
+Ví dụ về bean và autowired: 
+
+@Service
+@Component
+//Khi chúng ta có nhiều bean cùng loại, 
+//chúng ta sử dụng @Primary để ưu tiên cao 
+//hơn cho một loại bean cụ thể
+@Primary
+@Qualifier("load")
+public class countComponent implements CountService {
+
+    private int  loadCounter;
+
+    @Bean(name = "load")
+    @Override
+    public int LoadCount() {
+
+        return loadCounter++;
+    }
+}
+
+@Service
+@Component
+@Qualifier("load2")
+public class countComponent2 implements CountService {
+
+    private int  loadCounter;
+    @Bean(name = "load2")
+    @Override
+    public int LoadCount() {
+
+        loadCounter++;
+
+        return loadCounter;
+    }
+}
+
+@Service
+@Component
+@Qualifier("load3")
+public class countComponent3 implements CountService {
+
+
+    @Bean(name = "load3")
+    @Override
+    public int LoadCount() {
+        return 3;
+    }
+}
+
+@Getter
+@Setter
+@Controller
+public class DisplayHomeController {
+
+    private CategoryJobService categoryJobService;
+    private LaborService laborService;
+    private JobService jobService;
+    private JobDetailService jobDetailService;
+    private JobDetailRepo jobDetailRepo;
+    private LaborRepo laborRepo;
+    private PostService postService;
+
+    //countComponent countComponent2, countComponent3 là các bean
+    // tương dương new countComponent();, countComponent2();, countComponent3();
+    @Qualifier("load")
+    private CountService countService;
+    @Qualifier("load2")
+    private CountService countService2;
+    @Qualifier("load3")
+    private CountService countService3;
+
+    //Sử dụng annotation @Autowired để báo cho Spring 
+    //biết tự động tìm và inject bean phù hợp vào vị 
+    //trí đặt annotation.
+    @Autowired//inject
+    public DisplayHomeController(CountService countService, CountService countService2, CountService countService3) {
+        this.countService = countService;
+        this.countService2 = countService2;
+        this.countService3 = countService3;
+     
+    }
+
+    @GetMapping("/")
+    private String index(){
+
+        System.out.println("Bean 1: "+countService.LoadCount());
+        System.out.println("Bean 2: "+countService2.LoadCount());
+        System.out.println("Bean 3: "+countService3.LoadCount());
+    }
+}
+
+```
+
 ## KNOWLEDGE RESTFUL API 
 
 ### Life cycle restful api (Vòng đời của restful api)
