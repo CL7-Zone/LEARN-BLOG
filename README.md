@@ -184,6 +184,21 @@ public class TaskService {
 
 ```
 
+### @Modifying
+- Annotation @Modifying được sử dụng để chỉ định rằng truy vấn JPA hoặc 
+Hibernate hiện tại không phải là một truy vấn chỉ đọc mà là một truy vấn 
+sửa đổi dữ liệu (như INSERT, UPDATE, DELETE). Trong trường hợp này, 
+bạn đang thực hiện một truy vấn DELETE, vì vậy cần phải thêm @Modifying 
+để cho Spring Data JPA biết rằng đây là một truy vấn thay đổi dữ liệu.
+
+### @Transactional
+- Annotation @Transactional được sử dụng để chỉ định rằng phương thức 
+cần được thực hiện trong một giao dịch. Điều này đảm bảo rằng toàn 
+bộ quá trình thực thi phương thức sẽ được quản lý trong một giao dịch 
+và có thể được rollback nếu có lỗi xảy ra. Việc xóa dữ liệu là một hành động 
+thay đổi trạng thái của cơ sở dữ liệu, do đó, cần được thực hiện trong 
+một giao dịch để đảm bảo tính toàn vẹn của dữ liệu.
+
 ## KNOWLEDGE RESTFUL API 
 
 ### Life cycle restful api (Vòng đời của restful api)
